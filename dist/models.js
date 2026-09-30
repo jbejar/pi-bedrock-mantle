@@ -9,7 +9,7 @@
  *       baseUrl: http://localhost:57891/anthropic   (pi appends /v1/messages)
  *       headers: { anthropic-version: "2023-06-01" }
  *
- *   - GPT-5.x and Google Gemma models:
+ *   - GPT-5.x and Google Gemma 4 models:
  *       api: "openai-responses"
  *       baseUrl: http://localhost:57893/openai/v1   (pi appends /responses)
  *
@@ -283,14 +283,14 @@ function displayName(id) {
 }
 // ─── Route assignment ─────────────────────────────────────────────────────────
 // openai.gpt-5.* (and dated variants)  → openai-responses  on us-east-2
-// google.gemma-*                       → openai-responses  on us-east-2
+// google.gemma-4*                      → openai-responses  on us-east-2
 // anthropic.*                          → anthropic-messages on us-east-1
 // everything else                      → openai-completions  on us-east-2 (or us-east-1 fallback)
 function isOpenAIResponses(id) {
-    // The GPT-5 family and Google Gemma use the Responses API — Mantle rejects
-    // Gemma on /v1/chat/completions ("isn't supported on this route"). gpt-oss-*
-    // and all other providers use the Chat Completions API instead.
-    return /^(openai\.gpt-5\.|google\.gemma-)/.test(id);
+    // The GPT-5 family and Google Gemma 4 use the Responses API — Mantle rejects
+    // Gemma 4 on /v1/chat/completions ("isn't supported on this route"). Gemma 3,
+    // gpt-oss-* and all other providers use the Chat Completions API instead.
+    return /^(openai\.gpt-5\.|google\.gemma-4)/.test(id);
 }
 /**
  * Build a model config with placeholder baseUrls. The placeholder port is
@@ -317,14 +317,14 @@ function buildConfig(id, regions) {
     }
     const placeholder = regions.has("us-east-2") ? CMH_PLACEHOLDER : IAD_PLACEHOLDER;
     if (isOpenAIResponses(id)) {
-        // GPT-5.x and Gemma: use the OpenAI Responses API.
+        // GPT-5.x and Gemma 4: use the OpenAI Responses API.
         return {
             ...base,
             api: "openai-responses",
             baseUrl: `http://127.0.0.1:${placeholder}/openai/v1`,
         };
     }
-    // All other providers (DeepSeek, Qwen, Mistral, Kimi, MiniMax, NVIDIA,
+    // All other providers (DeepSeek, Qwen, Mistral, Kimi, MiniMax, NVIDIA, Gemma 3,
     // ZAI, Writer, openai.gpt-oss-*): use the OpenAI Chat Completions API.
     return {
         ...base,

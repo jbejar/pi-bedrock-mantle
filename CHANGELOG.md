@@ -8,10 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
-- `google.gemma-*` models now route through the Responses API
+- `google.gemma-4*` models now route through the Responses API
   (`/openai/v1/responses`). Mantle rejects them on `/v1/chat/completions`
   with `400 ... isn't supported on this route`. The model cache schema is
-  bumped to 4 so cached Gemma entries are rediscovered.
+  bumped to 4 so cached Gemma entries are rediscovered. Gemma 3 stays on chat
+  completions.
 
 ## [1.1.0] - 2026-09-24
 
