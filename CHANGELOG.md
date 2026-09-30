@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- `google.gemma-*` models now route through the Responses API
+  (`/openai/v1/responses`). Mantle rejects them on `/v1/chat/completions`
+  with `400 ... isn't supported on this route`. The model cache schema is
+  bumped to 4 so cached Gemma entries are rediscovered.
+
 ## [1.1.0] - 2026-09-24
 
 Everything since 1.0.2, the last version on npm (2026-06-04). GitHub `main`
